@@ -1,4 +1,3 @@
- HEAD
 # elparadisogonzalo-monorepo
 
 [![GitHub repo size](https://img.shields.io/github/repo-size/koagonzalo11/elparadisogonzalo-monorepo?color=blue&style=flat-square)](https://github.com/koagonzalo11/elparadisogonzalo-monorepo) 
@@ -100,20 +99,10 @@ This project is licensed under the MIT License — see the LICENSE file.
 ---
 
 Maintained by koagonzalo11
-HEAD
-Last updated: 2025-06-25
-=======
-Last updated: 2025-06-26
 
 ---
 
 If you want, I can help you:
-
-- Add this to your repo now  
-- Generate a minimal `logo.png` or other assets for that nice touch  
-- Setup badges for build status or coverage next
-
-Just say the word!
 
 7b09d99039 (Add enhanced README and logo asset)
 =======
@@ -275,3 +264,6 @@ ipfs add -r ./dist
 ## 🔧 Geth Sync Slow?
 - Use `--cache=2048` and `--syncmode=fast
  900fe0e1bf (Create README.md)
+
+# Elparadisogonzalo Site
+ 65911670f (Initial commit)
