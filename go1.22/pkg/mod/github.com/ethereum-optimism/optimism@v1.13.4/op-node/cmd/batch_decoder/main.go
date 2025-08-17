@@ -95,6 +95,16 @@ func main() {
 				} else {
 					fmt.Println("L1 Beacon endpoint not set. Unable to fetch post-ecotone channel frames")
 				}
+				// Clamp the concurrent-requests value to a safe maximum
+				const maxConcurrentRequests = 100
+				userConcurrentRequests := cliCtx.Int("concurrent-requests")
+				if userConcurrentRequests < 1 {
+					userConcurrentRequests = 1
+				}
+				if userConcurrentRequests > maxConcurrentRequests {
+					fmt.Printf("Warning: --concurrent-requests capped at %d (was %d)\n", maxConcurrentRequests, userConcurrentRequests)
+					userConcurrentRequests = maxConcurrentRequests
+				}
 				config := fetch.Config{
 					Start:   uint64(cliCtx.Int("start")),
 					End:     uint64(cliCtx.Int("end")),
@@ -104,7 +114,7 @@ func main() {
 					},
 					BatchInbox:         common.HexToAddress(cliCtx.String("inbox")),
 					OutDirectory:       cliCtx.String("out"),
-					ConcurrentRequests: uint64(cliCtx.Int("concurrent-requests")),
+					ConcurrentRequests: uint64(userConcurrentRequests),
 				}
 				totalValid, totalInvalid := fetch.Batches(l1Client, beacon, config)
 				fmt.Printf("Fetched batches in range [%v,%v). Found %v valid & %v invalid batches\n", config.Start, config.End, totalValid, totalInvalid)
