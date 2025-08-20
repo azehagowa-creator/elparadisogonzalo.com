@@ -118,7 +118,7 @@ This repository is designed to interact with **Ethereum & Binance Smart Chain (B
 
 ### 1️⃣ Clone the Repository  
 ```bash
-git clone https://github.com/koagonzalo11/asset3.git
+git clone https://github.com/koagonzalo11/elparadisohonzalo-monorepo.git
 cd asset3
 Certainly! Here’s a single block of code from “Install Dependencies” to “Contributions” for easy copying:
 
