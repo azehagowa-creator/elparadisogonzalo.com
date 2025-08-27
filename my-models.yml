@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=
+y# yaml-language-server: $schema=
 
 version: v0.1
 providers:
@@ -13,7 +13,7 @@ providers:
       - name: github_pages
         chat_completion_url: https://github.com/Elparadisogonzalo/Elparadisogonzalo.github.io.git
         headers:
-          Authorization: '{"i":"67d784c7d209b65a2f3c0e2d6ffd6226","c":"eedcb3f8ab11925c4a832b382f000597b5b239449d50da67023b42f4d454626e49aada4eeb16e9edada0217a4def370e56af71ec04ad51be1f3a4bf108e4b05dd099c444aac80c70080f2216daed0bd21efb44a653b82672057c6dde6bc768ce2bca650f","t":"fe35372dd370298f7e51e53cc5d119ed","author":"AI
+          Authorization: '{"i":"67d784c7d209b65a2f3c0e2d6ffd6226","c":"eedcb3f8ab11925c4a832b382f000597b5b239449d50da67023b42f4d454626e49aada4eeb16e9edada0217a4def370e56af71ec04ad51be1f3a4bf108e4b05dd099c444aac80c70080f2216daed0bd21efb44a653b82672057c6dde6bc768ce2bca650f","t":"fe35372dd370298f7e51e53cc5d119ed","author":"koagonzalo
             Toolkit"}'
         api_model_name: github_pages
   - name: GitHub
