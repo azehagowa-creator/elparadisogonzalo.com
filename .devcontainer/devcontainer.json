@@ -1,7 +1,7 @@
 {
-	"name": "Blockscout Elixir",
+	"name": "Azeh Agowa Dev Container",
 	"dockerComposeFile": "docker-compose.yml",
-	"service": "elixir",
+	"service": "Rust",
 	"workspaceFolder": "/workspace",
 	"postCreateCommand": {
 		"safe-directory": "git config --global --add safe.directory ${containerWorkspaceFolder}",
@@ -17,8 +17,8 @@
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"JakeBecker.elixir-ls",
-				"ckolkman.vscode-postgres",
+				"koagonzalo.elixir-ls",
+				"koagonzalo.vscode-postgres",
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
 				"GitHub.vscode-pull-request-github"
