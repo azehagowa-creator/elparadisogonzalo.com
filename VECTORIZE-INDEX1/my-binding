@@ -1,0 +1,6 @@
+export default {
+  async fetch(request, env) {
+    const queryVector = [32.4, 6.55, 11.2, 10.3, 87.9];
+    const matches = await env[" VECTORIZE-INDEX"].query(queryVector);
+  }
+}
