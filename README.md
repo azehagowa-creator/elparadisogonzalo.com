@@ -38,7 +38,7 @@ elparadisogonzalo-monorepo/ ├── frontend/             # React/JS frontend 
 
 - Node.js v16+  
 - MetaMask browser extension  
-- Git and GitHub CLI (`gh`)  
+- Git and GitHub CLI (`gh termux`)  
 - Access to Ethereum and BSC networks
 
 ### Setup
