@@ -1,123 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>elparadisogonzalo Token dApp</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Elparadisogonzalo</title>
+
+  <!-- Advance SEO -->
+  <meta name="description" content="Welcome to the El Paraiso Gonzalo app — hosted on GitHub Pages!" />
+  <meta name="author" content="Elparadisogonzalo" />
+
+  <!-- Favicon (optional) -->
+  <link rel="icon" href="elparadisogonzalo.ico" /></ "sdcard/Elparadisogonzalo/elparadisogonzalo@github.io/elparadisogonzalo.ico" />
+  <!-- Styles -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #6A1B9A;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      margin: 0 0 1rem;
+      font-size: 2.5rem;
+    }
+    p {
+      font-size: 1.2rem;
+      color: #555;
+    }
+    .links a {
+      color: #0066cc;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
+
 <body>
-  <h2>🦊 MetaMask Token dApp</h2>
+  <header>
+    <h1>Welcome to Elparadisogonzalo App</h1>
+    <p>This is your congenital work</p>
 
-  <button id="connect">Connect Wallet</button>
-  <p id="status"></p>
-  <p id="ethBalance"></p>
-  <p id="tokenBalance"></p>
+    <div class="links">
+      <p>
+        <a href="https://elparadisogonzalo.com/ target="_dynamic">
+          View on Elparadisogonzalo
+        </a>
+        |
+        <a href="#about">About</a>
+      </p>
+    </div>
+  </header>
 
-  <h3>📤 Send Tokens</h3>
-  <input type="text" id="recipient" placeholder="Recipient address" size="50">
-  <input type="text" id="amount" placeholder="Amount to send">
-  <button id="send">Send Tokens</button>
-  <p id="transferStatus"></p>
-
-  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
   <script>
-    const tokenAddress = "0x4e8c73e7f243d12b7a5571200609523a4890beff";
-    const tokenABI = [
-      {
-        "constant": true,
-        "inputs": [{"name": "_owner", "type": "address"}],
-        "name": "balanceOf",
-        "outputs": [{"name": "balance", "type": "uint256"}],
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "decimals",
-        "outputs": [{"name": "", "type": "uint8"}],
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "symbol",
-        "outputs": [{"name": "", "type": "string"}],
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          { "name": "_to", "type": "address" },
-          { "name": "_value", "type": "uint256" }
-        ],
-        "name": "transfer",
-        "outputs": [{ "name": "", "type": "bool" }],
-        "type": "function"
-      }
-    ];
-
-    let web3;
-    let userAddress;
-    let tokenContract;
-    let decimals = 18;
-    let symbol = "";
-
-    async function connect() {
-      if (typeof window.ethereum !== 'undefined') {
-        web3 = new Web3(window.ethereum);
-        try {
-          await ethereum.request({ method: "eth_requestAccounts" });
-          const accounts = await web3.eth.getAccounts();
-          userAddress = accounts[0];
-          document.getElementById("status").innerText = "✅ Connected: " + userAddress;
-
-          const ethBalance = await web3.eth.getBalance(userAddress);
-          document.getElementById("ethBalance").innerText =
-            "💰 ETH: " + web3.utils.fromWei(ethBalance, "ether");
-
-          tokenContract = new web3.eth.Contract(tokenABI, tokenAddress);
-          decimals = await tokenContract.methods.decimals().call();
-          symbol = await tokenContract.methods.symbol().call();
-          const rawBalance = await tokenContract.methods.balanceOf(userAddress).call();
-          const balance = rawBalance / Math.pow(10, decimals);
-          document.getElementById("tokenBalance").innerText =
-            "🎯 Token Balance: " + balance + " " + symbol;
-
-        } catch (err) {
-          document.getElementById("status").innerText = "❌ Error: " + err.message;
-        }
-      } else {
-        document.getElementById("status").innerText = "🦊 MetaMask not found";
-      }
-    }
-
-    async function sendTokens() {
-      const recipient = document.getElementById("recipient").value;
-      const amount = document.getElementById("amount").value;
-
-      if (!recipient || !amount) {
-        document.getElementById("transferStatus").innerText = "⚠️ Fill in all fields";
-        return;
-      }
-
-      const amountInWei = web3.utils.toBN(amount * Math.pow(10, decimals));
-
-      try {
-        document.getElementById("transferStatus").innerText = "⏳ Sending...";
-        await tokenContract.methods.transfer(recipient, amountInWei.toString()).send({ from: userAddress });
-        document.getElementById("transferStatus").innerText = "✅ Tokens sent to " + recipient;
-
-        // Update balance after sending
-        const newBalance = await tokenContract.methods.balanceOf(userAddress).call();
-        document.getElementById("tokenBalance").innerText =
-          "🎯 Token Balance: " + (newBalance / Math.pow(10, decimals)) + " " + symbol;
-
-      } catch (err) {
-        document.getElementById("transferStatus").innerText = "❌ Transfer failed: " + err.message;
-      }
-    }
-
-    document.getElementById("connect").onclick = connect;
-    document.getElementById("send").onclick = sendTokens;
+    console.log("👋 Welcome to Elparadisogonzalo App!");
   </script>
 </body>
 </html>
+
