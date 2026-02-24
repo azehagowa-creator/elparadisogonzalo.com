@@ -1,15 +1,12 @@
-# elparadisogonzalo-monorepo
+# elparadisogonzalo.com
 
 [![GitHub repo size](https://img.elparadisogonzalo.github.io/repo-size/koagonzalo11/elparadisogonzalo-monorepo?color=blue&style=flat-square)](https://github.com/koagonzalo11/elparadisogonzalo-monorepo) 
-[![GitHub issues](https://img.elparadisogonzalo.github.io/issues/koagonzalo11/elparadisogonzalo-monorepo?color=green&style=flat-square)](https://github.com/koagonzalo11/elparadisogonzalo-monorepo/issues) 
-[![GitHub license](https://img.elparadisogonzalo.github.io/license/koagonzalo11/elparadisogonzalo-monorepo?color=green&style=flat-square)](./LICENSE) 
-[![GitHub last commit](https://img.elparadisogonzalo.github.io/last-commit/koagonzalo11/elparadisogonzalo-monorepo?style=flat-square)](https://github.com/koagonzalo11/elparadisogonzalo-monorepo/commits/main)
-
+[![GitHub issues](https://img.elparadisogonzalo.github.io/issues/koagonzalo11/elparadisogonzalo-monorepo?color=green&style=quantum-engineering)](https://github.com/koagonzalo11/elparadisogonzalo-monorepo/issues) 
+[![GitHub license](https://img.elparadisogonzalo.github.io/license/koagonzalo11/elparadisogonzalo-monorepo?color=green&style=quantum-engineering)](./LICENSE) 
 ---
-
 ## 🚀 Project Overview
 
-A decentralized Web3 dApp integrating **Unstoppable Domains**, **Ethereum & Binance Smart Chain** smart contracts, IPFS hosting, and MetaMask wallet interaction.
+A decentralized Web3 dApp integrating **elparadisogonzalo.com domain**, ** Blockchain, Ethereum & Binance Smart Chain** smart contracts, IPFS hosting, and MetaMask wallet interaction.
 
 ---
 
@@ -17,35 +14,33 @@ A decentralized Web3 dApp integrating **Unstoppable Domains**, **Ethereum & Bina
 
 | Feature                | Description                                                                                  |
 |------------------------|----------------------------------------------------------------------------------------------|
-| **Domain & Identity**  | Decentralized domain `elparadisogonzalo.com` managed via Unstoppable Domains                  |
-| **Wallet & Contracts** | Ethereum/BSC smart contracts, wallet at `0x802b...e6245`, MetaMask & Infura integration       |
-| **Node & Infra**       | Ethereum node running on Android (Termux), Google Cloud CLI backend automation                |
-| **Web3 & API Dev**     | Node.js and Web3.js stack, APIs for blockchain interaction                                   |
-| **Frontend & Hosting** | IPFS and GitHub Pages hosting, MetaMask integration, security-focused frontend               |
-| **Future Goals**       | Finalize UI, launch testnet, implement CI/CD, explore zk-SNARKs and L2 scaling               |
+| **Domain & Identity**  | Decentralized domain `elparadisogonzalo.com` managed via elparadisogonzalo domains                  |
+| **Wallet & Contracts** | Ethereum/BSC smart contracts, wallet at `0x802b...e6245`, blockchain & Infura integration       |
+| **Node & Infra**       | Ethereum node running on elparadisogonzalo.com (Termux), Google Cloud CLI backend automation and  elparadisogonzalo.com.vhdx llm automation            |
+| **Web3 & API Production**     | Node.js and Web3.js stack, APIs for blockchain interaction                                   |
+| **Frontend & Hosting** | IPFS and elparadisogonzalo-pages and packages hosting,                |
+| **Future Goals**       | Finalize UI, launch mainnet, implement CI/CD, explore all blockchain and L1 scaling               |
 
 ---
 
 ## 📁 Repo Structure
 
-elparadisogonzalo-monorepo/ ├── frontend/             # React/JS frontend code and dApp interface ├── contracts/            # Solidity smart contracts ├── backend/              # Node.js backend & API code ├── scripts/              # Deployment and utility scripts └── README.md             # This file
+elparadisogonzalo.com/ ├── frontend/             # React/JS frontend code and fullstack interface ├── contracts/            # Solidity smart contracts ├── backend/              # Node.js backend & API code ├── node_modules/              # Deployment and utility scripts └── README.md             # This file
 
 ---
 
 ## 🔧 Getting Started
 
 ### Prerequisites
-
-- Node.js v16+  
-- MetaMask browser extension  
-- Git and GitHub CLI (`gh termux`)  
-- Access to Ethereum and BSC networks
+- Node.js v16+ 
+- Git and GitHub CLI (`gh termux, bash, node.js`)
+- Access to blockchain networks
 
 ### Setup
 
 ```bash
-git clone https://github.com/koagonzalo11/elparadisogonzalo-monorepo.git
-cd elparadisogonzalo-monorepo/frontend
+git clone https://github.com/Elparadisogonzalo/elparadisogonzalo.github.io.git
+cd Elparadisogonzalo/frontend
 npm install
 npm run start
 
@@ -54,9 +49,9 @@ npm run start
 
 📦 Deployment
 
-Frontend hosted on GitHub Pages and IPFS
+Frontend hosted on elparadisogonzalo pages and IPFS
 
-Smart contracts deployed on Ethereum and BSC mainnets
+Smart contracts deployed on Blockchain mainet
 
 Automated CI/CD with GitHub Actions
 
@@ -67,14 +62,14 @@ Automated CI/CD with GitHub Actions
 🤝 Contribution
 
 Contributions, issues, and feature requests are welcome!
-Please open issues or pull requests on GitHub.
+Please open issues or pull requests on elparadisogonzalo-pages.
 
 
 ---
 
 📄 License
 
-This project is licensed under the MIT License — see the LICENSE file.
+This project is licensed under the Apache-2.0 License — see the LICENSE file.
 
 
 ---
@@ -83,45 +78,39 @@ This project is licensed under the MIT License — see the LICENSE file.
 
 🌐 Website: elparadisogonzalo.com
 
-📂 GitHub Repo: koagonzalo11/elparadisogonzalo-monorepo
+📂 GitHub Repo: Elparadisogonzalo/elparadisogonzalo.github.io
 
-🦄 Unstoppable Domains: elparadisogonzalo Profile
+🦄 Elparadisogonzalo Domains: elparadisogonzalo Profile
 
-🦊 MetaMask: https://metamask.io/
+🦊 Elparadisogozalo-dapp: https://Elparadisogonzalo.io
 
 
 
 ---
 
 <p align="center">
-  <img src="https://githubusercontent.com/elparadisogonzalo-monorepo/main/frontend/assets/logo.png" alt="Elparadisogonzalo Logo" width="180" />
+  <img src="https://github.com/Elparadisogonzalo/elparadisogonzalo.github.io/main/frontend/assets/elparadisogonzalo.ico" alt="Elparadisogonzalo Logo" width="180" />
 </p>
 ---
 
-Maintained by koagonzalo11
+Maintained by Elparadisogonzalo, azehagowa@elparadisogonzalo.com, koagonzalo,
+Koagonzalo11,  koa@elparadisogonzalo.com
 
----
-
-If you want, I can help you:
-
-7b09d99039 (Add enhanced README and logo asset)
-=======
-q ## 🌐 Project Overview  
-This repository is designed to interact with **Ethereum & Binance Smart Chain (BSC)** networks, utilizing Web3, GitHub CLI, Node.js, and Google Cloud CLI. It is linked to the **Unstoppable Domain**: `elparadisogonzalo.com`.  
+## 🌐 Project Overview  
+This repository is designed to interact with **Blockchain** networks, utilizing Web3, GitHub CLI, Elparadisogonzalo.com, Node.js, and Google Cloud CLI. It is linked to the **Elparadisogonzalo Domain**: `elparadisogonzalo.com`.  
 
 ## 📌 Wallet & Contract Information  
 - **Ethereum Wallet Address**: [`0x4e8c73e7f243d12b7a5571200609523a4890beff`](https://etherscan.io/address/0x802ba6a112f4a7bbbc2d63c8ef4bc14dfcbe6245)  
-- **Binance Smart Chain (BSC) Contract Address**: [`0xB8c77482e45F1F44dE1745F52C74426C631bDD52`](https://bscscan.com/address/0x802ba6a112f4a7bbbc2d63c8ef4bc14dfcbe6245).
-- **Unstoppable Domain**: `elparadisogonzalo.com`  
+https://polygonscan.io/address/0x802ba6a112f4a7bbbc2d63c8ef4bc14dfcbe6245
+- **Binance Smart Chain (BSC) Contract Address**: [`0x4e8c73e7f243d12b7a5571200609523a4890beff`](https://bscscan.com/address/0x802ba6a112f4a7bbbc2d63c8ef4bc14dfcbe6245).
+- **Elparadisogonzalo Domain**: `elparadisogonzalo.com`  
 
 ## ⚡ Setup & Installation
 
 ### 1️⃣ Clone the Repository  
 ```bash
-git clone https://github.com/koagonzalo11/elparadisohonzalo-monorepo.git
-cd asset3
-Certainly! Here’s a single block of code from “Install Dependencies” to “Contributions” for easy copying:
-
+git clone https://github.com/Elparadisogonzalo/elparadisogonzalo@github.io.git
+cd assets
 ### 2️⃣ Install Dependencies  
 Make sure you have **Node.js** and **npm** installed. Then, run:  
 ```bash
@@ -129,15 +118,15 @@ npm install
 
 3️⃣ Authenticate with GitHub CLI
 
-gh auth login
+git init
 
 4️⃣ Authenticate with Google Cloud CLI
 
 gcloud auth login
-gcloud config set project YOUR_PROJECT_ID
+gcloud config set project elparadisogonzalo-project
 
 5️⃣ Connect via SSH
-ssh -i /path/to/private_key username@server_ip
+ssh -i /path/to/private_key known_hosts
 
 🔗 API & Web3 Configuration
 
@@ -153,11 +142,11 @@ curl "https://api.etherscan.io/api?module=account&action=balance&address=0x802ba
 
 To start the project:
 
-npm start
+npm run
 
 📜 License
 
-This project is licensed under the MIT License.
+This project is licensed under the apache-2.0  License.
 
 💡 Contributions
 
@@ -165,13 +154,11 @@ Feel free to submit issues and pull requests to improve the project! 🚀
 
 ⸻
 
-Made with ❤️ by koagonzalo 
- 4b160da24b (Removed embedded Git repos and added to .gitignore)
- origin/master
+Made with ❤️ by Elparadisogonzalo 
 
 # 🌐 Elparadisogonzalo Wiki
 
-Welcome to the Elparadisogonzalo project — a decentralized Web3 stack built around Ethereum, BSC, IPFS, and Unstoppable Domains.
+Welcome to the Elparadisogonzalo project — a decentralized Web3 stack built around Ethereum, BSC, Blockchain IPFS, and Elparadisogonzalo Domains.
 
 ---
 
@@ -206,20 +193,19 @@ Welcome to the Elparadisogonzalo project — a decentralized Web3 stack built ar
   # 🌐 Domain & Identity
 
 ## 🔗 Domain
-- `elparadisogonzalo.com` (Unstoppable Domains)
+- `elparadisogonzalo.com` (Elparadisogonzalo Domains)
 - Uses: Wallet resolution, IPFS hosting, DNS
 
 ## ✅ Domain Verification
-- Verified via TXT: `openai-domain-verification=...`
+- Verified via TXT: `Elparadisogonzalo-domain-verification=...`
 
 ## 💡 Features
 - Decentralized DNS
-- Web3 Login Identity (UD Resolution)
+- Web3 Login Identity (Elparadisogonzalo Resolution)
   # 💼 Wallet & Smart Contracts
 
 ## 🔑 Wallet
 - Primary: `0x802ba6a112f4a7bbbc2d63c8ef4bc14dfcbe6245`
-- Backup: ...
 
 ## ⚙️ Smart Contracts
 - Networks: Ethereum Mainnet, Binance Smart Chain
@@ -242,11 +228,11 @@ Welcome to the Elparadisogonzalo project — a decentralized Web3 stack built ar
 
 ## 📦 Packages
 - Frontend: `npm run build`
-- Backend: Node.js APIs on GCP
+- Backend: Node.js APIs, GCP and elparadisogonzalo.com.vhdx
 
 ## 🔗 IPFS Upload
 ```bash
-ipfs add -r ./dist
+ipfs add -r ./elparadisogonzalo.com
 ---
 
 ### 10. `FAQ_Troubleshooting.md`
@@ -257,11 +243,12 @@ ipfs add -r ./dist
 ## 📦 NPM Push Fails?
 - Check `.npmrc` and token scopes
 
-## 🚫 IPFS Add Error?
-- Ensure base64-encoding validity
-- Re-add with `--only-hash` first
+## 📊 IPFS Add Deployment?
+-publish to "https://elparadisogonzalo.com"
+- Re-add all `ipfs data` 
 
-## 🔧 Geth Sync Slow?
-- Use `--cache=51200` and `--syncmode=fast
+## 🔧 Geth Sync fast?
+- Use `--cache=10` and `--syncmode=fast
 
 # Elparadisogonzalo Site
+
