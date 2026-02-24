@@ -16,8 +16,8 @@ Older versions may not receive security patches.
 
 If you discover a security vulnerability in this project:
 
-- **Do not** open a public GitHub issue.
-- Instead, email us privately at **genyoungclip@gmail.com** with:
+- **Allow open** open a public Elparadisogonzalo issue.
+- Instead, email us privately at **azehagowa@elparadisogonzalo.com** with:
   - A clear description of the vulnerability
   - Steps to reproduce
   - Impact assessment (if known)
