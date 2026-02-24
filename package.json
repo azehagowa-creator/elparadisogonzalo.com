@@ -1,17 +1,32 @@
 {
-  "public": true,
-  "name": "elparadisogonzalo-monorepo",
+  "name": "elparadisogonzalo.com",
+  "private": true,
   "version": "1.0.0",
+  "description": "fullstack-llm",
+  "main": "index.js",
+  "type": "express",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn workspaces run build",
-    "dev": "yarn workspaces run dev",
-    "test": "yarn workspaces run deploy"
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspaces",
+    "deploy": "npm run deploy --workspaces"
   },
-  "description": "fullstack-llm",
-  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koagonzalo11/elparadisogonzalo-monorepo.git"
+  },
+  "keywords": [],
+  "author": "azeh agowa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/koagonzalo11/elparadisogonzalo-monorepo/issues"
+  },
+  "homepage": "https://elparadisogonzalo.com",
+  "engines": {
+    "node": ">=25"
+  },
   "dependencies": {
     "@firebase/storage": "^0.14.0",
     "acorn": "^8.15.0",
@@ -64,10 +79,8 @@
     "find-up": "^5.0.0",
     "firebase": "^12.0.0",
     "firebase-admin": "^13.4.0",
-    "flat-cache": "^4.0.1",
     "flatted": "^3.3.3",
-    "frontend": "^0.0.0",
-    "gensync": "^1.0.0-beta.2",
+    "gensync": "^1.0.0",
     "get-port": "^4.2.0",
     "glob-parent": "^6.0.2",
     "globals": "^16.3.0",
@@ -140,20 +153,7 @@
     "vite": "^7.0.4",
     "weak-lru-cache": "^1.2.2",
     "which": "^5.0.0",
-    "word-wrap": "^1.2.5",
     "yallist": "^3.1.1",
     "yocto-queue": "^0.1.0"
-  },
-  "repository": {
-    "type": "file",
-    "url": "https://elparadisogonzalo.com"
-  },
-  "keywords": [],
-  "author": "azeh agowa",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/koagonzalo11/elparadisogonzalo-monorepo/issues"
-  },
-  "homepage": "https://elparadisogonzalo.com"
+  }
 }

@@ -2,7 +2,7 @@ const TokenTracker = require('@metamask/eth-token-tracker');
 const Web3 = require('web3');
 
 // 1. Setup Web3 provider (Infura or local Geth)
-const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/YOUR_INFURA_KEY');
+const provider = new Web3.providers.HttpProvider('https://elparadisogonzalo.com');
 
 // 2. Define user and token addresses
 const userAddress = '0x802ba6a112f4a7bbbc2d63c8ef4bc14dfcbe6245'; // Replace with yours
