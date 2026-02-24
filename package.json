@@ -15,7 +15,7 @@
     "url": "git+https://github.com/Elparadisogonzalo/Elparadisogonzalo.github.io.git"
   },
   "license": "Apache-2.0",
-  "author": "azeh agowa",
+  "author": "elparadiso",
   "type": "commonjs",
   "main": "/sdcard/Elparadisogonzalo/elparadisogonzalo.github.io",
   "workspaces": [
