@@ -10,7 +10,7 @@ Older versions may not receive security patches.
 | Version          | Supported          |
 |-----------------|--------------------|
 | `main, elparadisogonzalo.com` / latest | ✅ Full support     |
-| older tags      | ❌ No longer patched |
+| older tags      | Full support |
 
 ## 🔐 Reporting a Vulnerability
 
