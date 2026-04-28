@@ -1,7 +1,7 @@
 {
   "name": "elparadisogonzalo-llm",
   "version": "1.0.0",
-  "private": true,
+  "public": true,
   "description": "elparadisogonzalo.com",
   "keywords": [
     "elparadisogonzalo.com"
