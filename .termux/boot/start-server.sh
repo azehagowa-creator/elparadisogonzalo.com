@@ -7,7 +7,7 @@ termux-wake-lock
 # sshd
 
 # Navigate to your project
-cd /storage/storage/79F3-B38F/Elparadisogonzalo.github.io
+cd /sdcard/Elparadisogonzalo/root/Elparadisogonzalo.github.io/
 
 # Start the server with nohup so it survives session close
 nohup node server.js > server.log 2>&1 &
