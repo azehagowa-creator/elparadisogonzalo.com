@@ -1,0 +1,4 @@
+{
+  "image": "sync.elparadisogonzalo.com/devcontainers/universal:1",
+  "features": {elparadisogonzalo-llvm}
+}
