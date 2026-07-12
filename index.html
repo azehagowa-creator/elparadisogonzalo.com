@@ -1,566 +1,256 @@
-const http = require('http');
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
-
-// ─── Configuration ──────────────────────────────────────────────────────────
-const CONFIG = {
-    PORT: process.env.PORT || 8080,
-    HTTPS_PORT: process.env.HTTPS_PORT || 8443,
-    HOST: process.env.HOST || '0.0.0.0',
-    PUBLIC_DIR: process.env.PUBLIC_DIR || path.join(__dirname, 'public'),
-    INDEX_FILE: 'index.html',
-    NOT_FOUND_FILE: '404.html',
-    ENABLE_HTTPS: process.env.ENABLE_HTTPS === 'true',
-    SSL_KEY: process.env.SSL_KEY || path.join(__dirname, 'ssl', 'key.pem'),
-    SSL_CERT: process.env.SSL_CERT || path.join(__dirname, 'ssl', 'cert.pem'),
-    ENABLE_GZIP: process.env.ENABLE_GZIP !== 'false',
-    ENABLE_CORS: process.env.ENABLE_CORS === 'true',
-    TRUST_PROXY: process.env.TRUST_PROXY === 'true',
-    RATE_LIMIT_WINDOW: parseInt(process.env.RATE_LIMIT_WINDOW) || 60000,
-    RATE_LIMIT_MAX: parseInt(process.env.RATE_LIMIT_MAX) || 10000,
-    NODE_ENV: process.env.NODE_ENV || 'production'
-};
-
-// ─── MIME Types ───────────────────────────────────────────────────────────────
-const MIME_TYPES = {
-    '.html': 'text/html; charset=utf-8',
-    '.htm': 'text/html; charset=utf-8',
-    '.js': 'application/javascript; charset=utf-8',
-    '.mjs': 'application/javascript; charset=utf-8',
-    '.css': 'text/css; charset=utf-8',
-    '.json': 'application/json; charset=utf-8',
-    '.xml': 'application/xml; charset=utf-8',
-    '.txt': 'text/plain; charset=utf-8',
-    '.md': 'text/markdown; charset=utf-8',
-    '.ico': 'image/x-icon',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.gif': 'image/gif',
-    '.svg': 'image/svg+xml',
-    '.webp': 'image/webp',
-    '.avif': 'image/avif',
-    '.woff': 'font/woff',
-    '.woff2': 'font/woff2',
-    '.ttf': 'font/ttf',
-    '.otf': 'font/otf',
-    '.eot': 'application/vnd.ms-fontobject',
-    '.pdf': 'application/pdf',
-    '.zip': 'application/zip',
-    '.gz': 'application/gzip',
-    '.tar': 'application/x-tar',
-    '.mp4': 'video/mp4',
-    '.webm': 'video/webm',
-    '.mp3': 'audio/mpeg',
-    '.ogg': 'audio/ogg',
-    '.wav': 'audio/wav',
-    '.wasm': 'application/wasm',
-    '.map': 'application/json'
-};
-
-const COMPRESSIBLE_TYPES = [
-    'text/', 'application/javascript', 'application/json',
-    'application/xml', 'application/wasm'
-];
-
-// ─── Security Headers ─────────────────────────────────────────────────────────
-const SECURITY_HEADERS = {
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'ALLOW',
-    'X-XSS-Protection': '1; mode=block',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()',
-    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-    'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https:; media-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
-};
-
-// ─── Rate Limiting (Simple In-Memory) ─────────────────────────────────────────
-const requestCounts = new Map();
-
-function isRateLimited(clientIp) {
-    const now = Date.now();
-    const windowStart = now - CONFIG.RATE_LIMIT_WINDOW;
-
-    if (!requestCounts.has(clientIp)) {
-        requestCounts.set(clientIp, []);
-    }
-
-    const timestamps = requestCounts.get(clientIp).filter(t => t > windowStart);
-    timestamps.push(now);
-    requestCounts.set(clientIp, timestamps);
-
-    return timestamps.length > CONFIG.RATE_LIMIT_MAX;
-}
-
-// Cleanup old entries every 5 minutes
-setInterval(() => {
-    const now = Date.now();
-    const windowStart = now - CONFIG.RATE_LIMIT_WINDOW;
-    for (const [ip, timestamps] of requestCounts) {
-        const filtered = timestamps.filter(t => t > windowStart);
-        if (filtered.length === 0) {
-            requestCounts.delete(ip);
-        } else {
-            requestCounts.set(ip, filtered);
-        }
-    }
-}, 300000);
-
-// ─── Logging ──────────────────────────────────────────────────────────────────
-function logRequest(req, statusCode, duration, bytes) {
-    const timestamp = new Date().toISOString();
-    const clientIp = getClientIp(req);
-    const method = req.method;
-    const url = req.url;
-    const userAgent = req.headers['user-agent'] || '-';
-
-    console.log(`[${timestamp}] ${clientIp} - ${method} ${url} ${statusCode} ${bytes}B ${duration}ms - ${userAgent}`);
-}
-
-function getClientIp(req) {
-    if (CONFIG.TRUST_PROXY) {
-        const forwarded = req.headers['x-forwarded-for'];
-        if (forwarded) return forwarded.split(',')[0].trim();
-    }
-    return req.socket.remoteAddress || 'unknown';
-}
-
-// ─── File Serving ─────────────────────────────────────────────────────────────
-function getMimeType(filePath) {
-    const ext = path.extname(filePath).toLowerCase();
-    return MIME_TYPES[ext] || 'application/octet-stream';
-}
-
-function isCompressible(mimeType) {
-    return COMPRESSIBLE_TYPES.some(type => mimeType.startsWith(type));
-}
-
-function sanitizePath(requestPath) {
-    // Prevent directory traversal
-    const decoded = decodeURIComponent(requestPath);
-    const normalized = path.normalize(decoded);
-
-    if (normalized.startsWith('..') || normalized.includes('\x00')) {
-        return null;
-    }
-
-    return normalized;
-}
-
-function serveFile(filePath, req, res) {
-    const startTime = Date.now();
-
-    fs.stat(filePath, (err, stats) => {
-        if (err || !stats.isFile()) {
-            sendError(404, req, res, startTime);
-            return;
-        }
-
-        const mimeType = getMimeType(filePath);
-        const headers = {
-            'Content-Type': mimeType,
-            'Cache-Control': mimeType.startsWith('text/html')
-                ? 'no-cache, no-store, must-revalidate'
-                : 'public, max-age=31536000, immutable',
-            'ETag': `"${stats.mtime.getTime().toString(16)}-${stats.size.toString(16)}"`,
-            'Last-Modified': stats.mtime.toUTCString()
-        };
-
-        const ifNoneMatch = req.headers['if-none-match'];
-        const ifModifiedSince = req.headers['if-modified-since'];
-
-        if ((ifNoneMatch && ifNoneMatch === headers['ETag']) ||
-            (ifModifiedSince && new Date(ifModifiedSince) >= stats.mtime)) {
-            res.writeHead(304, headers);
-            res.end();
-            logRequest(req, 304, Date.now() - startTime, 0);
-            return;
-        }
-
-        const acceptEncoding = req.headers['accept-encoding'] || '';
-        const supportsGzip = acceptEncoding.includes('gzip') && isCompressible(mimeType) && CONFIG.ENABLE_GZIP;
-
-        if (supportsGzip && stats.size > 1024) {
-            const zlib = require('zlib');
-            headers['Content-Encoding'] = 'gzip';
-            delete headers['Content-Length'];
-
-            res.writeHead(200, headers);
-
-            const stream = fs.createReadStream(filePath);
-            const gzip = zlib.createGzip({ level: 6 });
-
-            let bytesSent = 0;
-            stream.on('data', chunk => bytesSent += chunk.length);
-
-            stream.pipe(gzip).pipe(res);
-
-            res.on('finish', () => {
-                logRequest(req, 200, Date.now() - startTime, bytesSent);
-            });
-        } else {
-            headers['Content-Length'] = stats.size;
-            res.writeHead(200, headers);
-
-            const stream = fs.createReadStream(filePath);
-            let bytesSent = 0;
-
-            stream.on('data', chunk => bytesSent += chunk.length);
-            stream.pipe(res);
-
-            res.on('finish', () => {
-                logRequest(req, 200, Date.now() - startTime, bytesSent);
-            });
-        }
-    });
-}
-
-function sendError(statusCode, req, res, startTime = Date.now()) {
-    const errorFile = path.join(CONFIG.PUBLIC_DIR, CONFIG.NOT_FOUND_FILE);
-
-    const sendSimpleError = () => {
-        const body = `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="utf-8"><title>${statusCode}</title></head>
-<body><h1>${statusCode}</h1><p>${http.STATUS_CODES[statusCode]}</p></body>
-root@localhost:~/elparadisogonzalo-monorepo/backend# cd public
-root@localhost:~/elparadisogonzalo-monorepo/backend/public# ls
-404.html  favicon.ico  index.html
-root@localhost:~/elparadisogonzalo-monorepo/backend/public# cat index.html
-const http = require('http');
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LLVM-powered Web3 and DeFi development platform." />
+  <title>Elparadisogonzalo | LLVM × Web3 × DeFi</title>
 
-// ─── Configuration ──────────────────────────────────────────────────────────
-const CONFIG = {
-    PORT: process.env.PORT || 8080,
-    HTTPS_PORT: process.env.HTTPS_PORT || 8443,
-    HOST: process.env.HOST || '0.0.0.0',
-    PUBLIC_DIR: process.env.PUBLIC_DIR || path.join(__dirname, 'public'),
-    INDEX_FILE: 'index.html',
-    NOT_FOUND_FILE: '404.html',
-    ENABLE_HTTPS: process.env.ENABLE_HTTPS === 'true',
-    SSL_KEY: process.env.SSL_KEY || path.join(__dirname, 'ssl', 'key.pem'),
-    SSL_CERT: process.env.SSL_CERT || path.join(__dirname, 'ssl', 'cert.pem'),
-    ENABLE_GZIP: process.env.ENABLE_GZIP !== 'false',
-    ENABLE_CORS: process.env.ENABLE_CORS === 'true',
-    TRUST_PROXY: process.env.TRUST_PROXY === 'true',
-    RATE_LIMIT_WINDOW: parseInt(process.env.RATE_LIMIT_WINDOW) || 60000,
-    RATE_LIMIT_MAX: parseInt(process.env.RATE_LIMIT_MAX) || 10000,
-    NODE_ENV: process.env.NODE_ENV || 'production'
-};
-
-// ─── MIME Types ───────────────────────────────────────────────────────────────
-const MIME_TYPES = {
-    '.html': 'text/html; charset=utf-8',
-    '.htm': 'text/html; charset=utf-8',
-    '.js': 'application/javascript; charset=utf-8',
-    '.mjs': 'application/javascript; charset=utf-8',
-    '.css': 'text/css; charset=utf-8',
-    '.json': 'application/json; charset=utf-8',
-    '.xml': 'application/xml; charset=utf-8',
-    '.txt': 'text/plain; charset=utf-8',
-    '.md': 'text/markdown; charset=utf-8',
-    '.ico': 'image/x-icon',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.gif': 'image/gif',
-    '.svg': 'image/svg+xml',
-    '.webp': 'image/webp',
-    '.avif': 'image/avif',
-    '.woff': 'font/woff',
-    '.woff2': 'font/woff2',
-    '.ttf': 'font/ttf',
-    '.otf': 'font/otf',
-    '.eot': 'application/vnd.ms-fontobject',
-    '.pdf': 'application/pdf',
-    '.zip': 'application/zip',
-    '.gz': 'application/gzip',
-    '.tar': 'application/x-tar',
-    '.mp4': 'video/mp4',
-    '.webm': 'video/webm',
-    '.mp3': 'audio/mpeg',
-    '.ogg': 'audio/ogg',
-    '.wav': 'audio/wav',
-    '.wasm': 'application/wasm',
-    '.map': 'application/json'
-};
-
-const COMPRESSIBLE_TYPES = [
-    'text/', 'application/javascript', 'application/json',
-    'application/xml', 'application/wasm'
-];
-
-// ─── Security Headers ─────────────────────────────────────────────────────────
-const SECURITY_HEADERS = {
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'ALLOW',
-    'X-XSS-Protection': '1; mode=block',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()',
-    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-    'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https:; media-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
-};
-
-// ─── Rate Limiting (Simple In-Memory) ─────────────────────────────────────────
-const requestCounts = new Map();
-
-function isRateLimited(clientIp) {
-    const now = Date.now();
-    const windowStart = now - CONFIG.RATE_LIMIT_WINDOW;
-
-    if (!requestCounts.has(clientIp)) {
-        requestCounts.set(clientIp, []);
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    const timestamps = requestCounts.get(clientIp).filter(t => t > windowStart);
-    timestamps.push(now);
-    requestCounts.set(clientIp, timestamps);
-
-    return timestamps.length > CONFIG.RATE_LIMIT_MAX;
-}
-
-// Cleanup old entries every 5 minutes
-setInterval(() => {
-    const now = Date.now();
-    const windowStart = now - CONFIG.RATE_LIMIT_WINDOW;
-    for (const [ip, timestamps] of requestCounts) {
-        const filtered = timestamps.filter(t => t > windowStart);
-        if (filtered.length === 0) {
-            requestCounts.delete(ip);
-        } else {
-            requestCounts.set(ip, filtered);
-        }
-    }
-}, 300000);
-
-// ─── Logging ──────────────────────────────────────────────────────────────────
-function logRequest(req, statusCode, duration, bytes) {
-    const timestamp = new Date().toISOString();
-    const clientIp = getClientIp(req);
-    const method = req.method;
-    const url = req.url;
-    const userAgent = req.headers['user-agent'] || '-';
-
-    console.log(`[${timestamp}] ${clientIp} - ${method} ${url} ${statusCode} ${bytes}B ${duration}ms - ${userAgent}`);
-}
-
-function getClientIp(req) {
-    if (CONFIG.TRUST_PROXY) {
-        const forwarded = req.headers['x-forwarded-for'];
-        if (forwarded) return forwarded.split(',')[0].trim();
-    }
-    return req.socket.remoteAddress || 'unknown';
-}
-
-// ─── File Serving ─────────────────────────────────────────────────────────────
-function getMimeType(filePath) {
-    const ext = path.extname(filePath).toLowerCase();
-    return MIME_TYPES[ext] || 'application/octet-stream';
-}
-
-function isCompressible(mimeType) {
-    return COMPRESSIBLE_TYPES.some(type => mimeType.startsWith(type));
-}
-
-function sanitizePath(requestPath) {
-    // Prevent directory traversal
-    const decoded = decodeURIComponent(requestPath);
-    const normalized = path.normalize(decoded);
-
-    if (normalized.startsWith('..') || normalized.includes('\x00')) {
-        return null;
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0d1117;
+      color: #fff;
+      line-height: 1.6;
     }
 
-    return normalized;
-}
-
-function serveFile(filePath, req, res) {
-    const startTime = Date.now();
-
-    fs.stat(filePath, (err, stats) => {
-        if (err || !stats.isFile()) {
-            sendError(404, req, res, startTime);
-            return;
-        }
-
-        const mimeType = getMimeType(filePath);
-        const headers = {
-            'Content-Type': mimeType,
-            'Cache-Control': mimeType.startsWith('text/html')
-                ? 'no-cache, no-store, must-revalidate'
-                : 'public, max-age=31536000, immutable',
-            'ETag': `"${stats.mtime.getTime().toString(16)}-${stats.size.toString(16)}"`,
-            'Last-Modified': stats.mtime.toUTCString()
-        };
-
-        const ifNoneMatch = req.headers['if-none-match'];
-        const ifModifiedSince = req.headers['if-modified-since'];
-
-        if ((ifNoneMatch && ifNoneMatch === headers['ETag']) ||
-            (ifModifiedSince && new Date(ifModifiedSince) >= stats.mtime)) {
-            res.writeHead(304, headers);
-            res.end();
-            logRequest(req, 304, Date.now() - startTime, 0);
-            return;
-        }
-
-        const acceptEncoding = req.headers['accept-encoding'] || '';
-        const supportsGzip = acceptEncoding.includes('gzip') && isCompressible(mimeType) && CONFIG.ENABLE_GZIP;
-
-        if (supportsGzip && stats.size > 1024) {
-            const zlib = require('zlib');
-            headers['Content-Encoding'] = 'gzip';
-            delete headers['Content-Length'];
-
-            res.writeHead(200, headers);
-
-            const stream = fs.createReadStream(filePath);
-            const gzip = zlib.createGzip({ level: 6 });
-
-            let bytesSent = 0;
-            stream.on('data', chunk => bytesSent += chunk.length);
-
-            stream.pipe(gzip).pipe(res);
-
-            res.on('finish', () => {
-                logRequest(req, 200, Date.now() - startTime, bytesSent);
-            });
-        } else {
-            headers['Content-Length'] = stats.size;
-            res.writeHead(200, headers);
-
-            const stream = fs.createReadStream(filePath);
-            let bytesSent = 0;
-
-            stream.on('data', chunk => bytesSent += chunk.length);
-            stream.pipe(res);
-
-            res.on('finish', () => {
-                logRequest(req, 200, Date.now() - startTime, bytesSent);
-            });
-        }
-    });
-}
-
-function sendError(statusCode, req, res, startTime = Date.now()) {
-    const errorFile = path.join(CONFIG.PUBLIC_DIR, CONFIG.NOT_FOUND_FILE);
-
-    const sendSimpleError = () => {
-        const body = `<!DOCTYPE html>
-<html lang="en">
-<head><meta charset="utf-8"><title>${statusCode}</title></head>
-<body><h1>${statusCode}</h1><p>${http.STATUS_CODES[statusCode]}</p></body>
-</html>`;
-
-        const headers = {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Content-Length': Buffer.byteLength(body)
-        };
-
-        res.writeHead(statusCode, headers);
-        res.end(body);
-        logRequest(req, statusCode, Date.now() - startTime, Buffer.byteLength(body));
-    };
-
-    if (statusCode === 404 && fs.existsSync(errorFile)) {
-        fs.readFile(errorFile, (err, data) => {
-            if (err) {
-                sendSimpleError();
-                return;
-            }
-            const headers = {
-                'Content-Type': 'text/html; charset=utf-8',
-                'Content-Length': data.length,
-                'Cache-Control': 'no-cache, no-store, must-revalidate'
-            };
-            res.writeHead(404, headers);
-            res.end(data);
-            logRequest(req, 404, Date.now() - startTime, data.length);
-        });
-    } else {
-        sendSimpleError();
-    }
-}
-
-// ─── Request Handler ──────────────────────────────────────────────────────────
-function handleRequest(req, res) {
-    const startTime = Date.now();
-
-    if (req.method !== 'GET' && req.method !== 'HEAD') {
-        res.writeHead(405, { 'Allow': 'GET, HEAD' });
-        res.end();
-        logRequest(req, 405, Date.now() - startTime, 0);
-        return;
+    header {
+      padding: 60px 20px;
+      text-align: center;
+      background: linear-gradient(135deg,#0f172a,#1d4ed8);
     }
 
-    Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
-        res.setHeader(key, value);
-    });
-
-    if (CONFIG.ENABLE_CORS) {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD');
+    h1 {
+      font-size: 3rem;
     }
 
-    const clientIp = getClientIp(req);
-    if (isRateLimited(clientIp)) {
-        res.writeHead(429, { 'Content-Type': 'text/plain' });
-        res.end('Too Many Requests');
-        logRequest(req, 429, Date.now() - startTime, 19);
-        return;
+    p {
+      color: #d1d5db;
     }
 
-    // Modern WHATWG URL Parsing
-    const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    let pathname = sanitizePath(parsedUrl.pathname);
-
-    if (pathname === null) {
-        sendError(403, req, res, startTime);
-        return;
+    nav {
+      background: #111827;
+      padding: 15px;
+      text-align: center;
     }
 
-    let filePath = path.join(CONFIG.PUBLIC_DIR, pathname);
-
-    if (pathname.endsWith('/')) {
-        filePath = path.join(filePath, CONFIG.INDEX_FILE);
-    } else {
-        try {
-            const stats = fs.statSync(filePath);
-            if (stats.isDirectory()) {
-                res.writeHead(301, { 'Location': pathname + '/' });
-                res.end();
-                logRequest(req, 301, Date.now() - startTime, 0);
-                return;
-            }
-        } catch (e) {
-            // Not a directory, move on
-        }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
     }
 
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-        if (err) {
-            const htmlPath = filePath + '.html';
-            fs.access(htmlPath, fs.constants.F_OK, (htmlErr) => {
-                if (!htmlErr) {
-                    serveFile(htmlPath, req, res);
-                } else {
-                    sendError(404, req, res, startTime);
-                }
-            });
-            return;
-        }
-        serveFile(filePath, req, res);
-    });
-}
+    section {
+      max-width: 1100px;
+      margin: auto;
+      padding: 60px 20px;
+    }
 
-// ─── Server Creation ──────────────────────────────────────────────────────────
-function createServer() {
-    const server = http.createServer(handleRequest);
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+      gap: 20px;
+    }
 
-    server.on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-            console.er
+    .card {
+      background: #161b22;
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid #30363d;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      background: #111827;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>LLVM × Web3 × DeFi</h1>
+
+  <p>
+    Build decentralized applications powered by LLVM,
+    Ethereum-compatible smart contracts,
+    staking protocols, and secure wallet integration.
+  </p>
+
+  <a href="#features" class="button">
+    Explore Platform
+  </a>
+</header>
+
+<nav>
+  <a href="#features">Features</a>
+  <a href="#defi">DeFi</a>
+  <a href="#llvm">LLVM</a>
+  <a href="#roadmap">Roadmap</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<section id="features">
+
+<h2>Platform Features</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>⚡ LLVM Toolchain</h3>
+<p>
+Compile optimized native applications,
+build compiler infrastructure,
+and integrate low-level performance tooling.
+</p>
+</div>
+
+<div class="card">
+<h3>🔗 Web3</h3>
+<p>
+Wallet authentication,
+Ethereum-compatible networks,
+JSON-RPC,
+and decentralized identity.
+</p>
+</div>
+
+<div class="card">
+<h3>💰 DeFi</h3>
+<p>
+Token staking,
+yield farming,
+liquidity pools,
+governance,
+and treasury management.
+</p>
+</div>
+
+<div class="card">
+<h3>🛡 Security</h3>
+<p>
+Audited smart contracts,
+multi-signature wallets,
+access control,
+and secure deployment pipelines.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="defi">
+
+<h2>DeFi Dashboard</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Wallet</h3>
+<p>Connect MetaMask or WalletConnect.</p>
+<button>Connect Wallet</button>
+</div>
+
+<div class="card">
+<h3>Stake Tokens</h3>
+<p>Deposit supported assets into staking pools.</p>
+<button>Stake</button>
+</div>
+
+<div class="card">
+<h3>Rewards</h3>
+<p>Track earned rewards and APY.</p>
+<button>Claim Rewards</button>
+</div>
+
+</div>
+
+</section>
+
+<section id="llvm">
+
+<h2>LLVM Development</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Compiler</h3>
+<p>Clang, LLVM IR, LLD, and optimization passes.</p>
+</div>
+
+<div class="card">
+<h3>Build System</h3>
+<p>CMake, Ninja, CI/CD, testing, and cross-platform builds.</p>
+</div>
+
+<div class="card">
+<h3>Performance</h3>
+<p>Profiling, optimization, benchmarking, and diagnostics.</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="roadmap">
+
+<h2>Roadmap</h2>
+
+<ul>
+<li>✅ Wallet Integration</li>
+<li>✅ Smart Contract Deployment</li>
+<li>🚀 LLVM Compiler Toolkit</li>
+<li>🚀 Token Staking</li>
+<li>🚀 DAO Governance</li>
+<li>🚀 Cross-chain Bridge</li>
+</ul>
+
+</section>
+
+<section id="contact">
+
+<h2>Project</h2>
+
+<p>
+Repository:
+<strong>Elparadisogonzalo</strong>
+</p>
+
+<p>
+Open-source infrastructure for LLVM,
+Web3,
+and decentralized finance.
+</p>
+
+</section>
+
+<footer>
+
+<p>
+© 2026 Elparadisogonzalo • LLVM • Web3 • DeFi
+</p>
+
+</footer>
+
+</body>
+</html>
