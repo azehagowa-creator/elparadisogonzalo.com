@@ -1,0 +1,57 @@
+name: Test Self-Hosted Runner
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Runner information
+        run: |
+          echo "Runner: $RUNNER_NAME"
+          echo "OS: $RUNNER_OS"
+          echo "Architecture: $RUNNER_ARCH"
+          echo "Workspace: $GITHUB_WORKSPACE"
+
+      - name: System information
+        run: |
+          uname -a
+          whoami
+          pwd
+          df -h
+          free -h || true
+
+      - name: Git information
+        run: |
+          git --version
+          git status
+
+      - name: Node.js information
+        run: |
+          node --version || true
+          npm --version || true
+
+      - name: Python information
+        run: |
+          python3 --version || true
+          pip3 --version || true
+
+      - name: Java information
+        run: |
+          java -version || true
+
+      - name: Docker information
+        run: |
+          docker --version || true
+
+      - name: Success
+        run: echo "✅ Self-hosted runner is working correctly."
