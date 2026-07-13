@@ -1,0 +1,26 @@
+{
+  "digest": "sha256:e82b3507033c7633aee016d25c94ebc034baff521533ff26a81478ce1806277f",
+  "mediaType": "application/vnd.oci.image.manifest.v1+json",
+  "size": 1236,
+  "config": {
+    "digest": "",
+    "mediaType": "application/vnd.github.codeql.package.v1",
+    "size": 0
+  },
+  "layers": [
+    {
+      "digest": "sha256:b7bc958fd04cf2297e523f1e1a5b61c30a317d0b41d524c02e315fb7d0566090",
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "size": 2241773
+    }
+  ],
+  "labels": {
+    "com.github.codeql.cli.version": "2.22.4",
+    "org.opencontainers.image.title": "codeql/csharp-all",
+    "org.opencontainers.image.revision": "57378ec4e4fea5949e18db35b4c84123ad950065",
+    "org.opencontainers.image.created": "57378ec4e4fea5949e18db35b4c84123ad950065",
+    "org.opencontainers.image.version": "5.2.2",
+    "com.github.package.type": "codeql_pack_library",
+    "com.github.codeql.dependencies": "{\"codeql/controlflow\":\"2.0.13\",\"codeql/dataflow\":\"2.0.13\",\"codeql/mad\":\"1.0.29\",\"codeql/ssa\":\"2.0.5\",\"codeql/threat-models\":\"1.0.29\",\"codeql/tutorial\":\"1.0.29\",\"codeql/util\":\"2.0.16\",\"codeql/xml\":\"1.0.29\"}"
+  }
+}
