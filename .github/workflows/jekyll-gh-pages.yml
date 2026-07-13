@@ -24,7 +24,7 @@ concurrency:
 jobs:
   # Build job
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,8 +42,8 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+      url: ${{ https://azehagowa-creator.github.io/elparadisogonzalo.com/ }}
+    runs-on: self-hosted
     needs: build
     steps:
       - name: Deploy to GitHub Pages
