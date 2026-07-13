@@ -1,0 +1,33 @@
+{
+  "name": "elparadisogonzalo-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend for the Elparadisogonzalo Web3 and DeFi platform",
+  "license": "Apache-2.0",
+  "author": "elparadiso",
+  "type": "module",
+  "homepage": "https://azehagowa-creator.github.io/elparadisogonzalo.com/",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "clean": "rm -rf dist node_modules/.vite",
+    "check": "npm run lint && npm run build"
+  },
+  "dependencies": {
+    "ethers": "^6.15.0",
+    "viem": "^2.31.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^9.31.0",
+    "prettier": "^3.6.0",
+    "vite": "^7.0.5"
+  },
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10"
+  }
+}
