@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Android Build
 
 on:
   workflow_dispatch:
@@ -36,8 +36,7 @@ jobs:
 
       - name: Install frontend dependencies
         working-directory: frontend
-        run: |
-          npm install
+        run: npm install
 
       - name: Install Rollup native package
         working-directory: frontend
@@ -52,13 +51,16 @@ jobs:
         working-directory: frontend
         run: npx cap sync android
 
+      # Fixed: keystore is stored in frontend/android/app/
       - name: Restore Android keystore
-        working-directory: frontend/android
+        working-directory: frontend/android/app
         env:
           KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > app/release.keystore
+          echo "$KEYSTORE_BASE64" | base64 --decode > release.keystore
+          ls -lh release.keystore
 
+      # Fixed: Gradle resolves this relative to app/
       - name: Create keystore.properties
         working-directory: frontend/android
         env:
@@ -67,19 +69,20 @@ jobs:
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           cat > keystore.properties <<EOF
-          storeFile=app/release.keystore
+          storeFile=release.keystore
           storeType=PKCS12
           storePassword=$STORE_PASSWORD
           keyAlias=$KEY_ALIAS
           keyPassword=$KEY_PASSWORD
           EOF
 
+          cat keystore.properties
+
       - name: Verify keystore
-        working-directory: frontend/android
+        working-directory: frontend/android/app
         run: |
-          ls -lh app/release.keystore
           keytool -list \
-            -keystore app/release.keystore \
+            -keystore release.keystore \
             -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}"
 
       - name: Make Gradle executable
