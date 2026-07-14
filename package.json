@@ -1,30 +1,53 @@
 {
   "name": "elparadisogonzalo-com",
   "version": "1.0.0",
-  "public": true,
-  "description": "Elparadisogonzalo Web3 dApp and website",
+  "private": true,
+  "description": "Elparadisogonzalo Web3 dApp, website, Android app, and APIs",
   "license": "Apache-2.0",
   "author": "Azeh Agowa",
+  "homepage": "https://azehagowa-creator.github.io/elparadisogonzalo.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/azehagowa-creator/elparadisogonzalo.com.git"
+    "url": "git+https://github.com/azehagowa-creator/elparadisogonzalo.com.git"
   },
-  "homepage": "https://azehagowa-creator.github.io/elparadisogonzalo.com/",
-  "workspaces": [
-    "frontend"
+  "bugs": {
+    "url": "https://github.com/azehagowa-creator/elparadisogonzalo.com/issues"
+  },
+  "keywords": [
+    "web3",
+    "ethereum",
+    "bsc",
+    "blockchain",
+    "vite",
+    "capacitor",
+    "android",
+    "github-pages",
+    "unstoppable-domains"
   ],
   "engines": {
     "node": ">=22",
     "npm": ">=10"
   },
+  "workspaces": [
+    "frontend"
+  ],
   "scripts": {
-    "install:frontend": "npm --prefix frontend install",
-    "dev": "npm --prefix frontend run dev",
-    "build": "npm --prefix frontend run build",
-    "preview": "npm --prefix frontend run preview",
-    "sync": "npm --prefix frontend exec cap sync android",
-    "android": "npm --prefix frontend exec cap open android",
+    "install": "npm install --workspace frontend",
+    "dev": "npm run dev --workspace frontend",
+    "build": "npm run build --workspace frontend",
+    "preview": "npm run preview --workspace frontend",
+    "lint": "npm run lint --workspace frontend",
+    "sync": "npm exec --workspace frontend cap sync android",
+    "android": "npm exec --workspace frontend cap open android",
+    "clean": "rm -rf node_modules package-lock.json frontend/node_modules frontend/package-lock.json frontend/dist",
+    "reinstall": "npm run clean && npm install",
     "apk": "cd frontend/android && ./gradlew assembleDebug",
-    "release": "cd frontend/android && ./gradlew assembleRelease"
-  }
+    "release": "cd frontend/android && ./gradlew assembleRelease",
+    "bundle": "cd frontend/android && ./gradlew bundleRelease",
+    "test": "echo \"No tests configured\"",
+    "prepare": "echo \"Repository ready\""
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "packageManager": "npm@10"
 }

@@ -1,2 +1,0 @@
-echo 'export N_PREFIX=$HOME/.n' >> ~/.bashrc
-echo 'export PATH="$N_PREFIX/bin:$PATH"' >> ~/.bashrc
