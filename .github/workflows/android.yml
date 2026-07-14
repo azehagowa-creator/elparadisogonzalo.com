@@ -8,7 +8,7 @@ on:
       - master
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -29,23 +29,20 @@ jobs:
           java-version: "21"
           cache: gradle
 
-      - name: Setup Node.js 22
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
 
       - name: Install frontend dependencies
         working-directory: frontend
-        run: npm ci
+        run: |
+          npm install
 
       - name: Install Rollup native package
         working-directory: frontend
-        run: npm install --save-dev @rollup/rollup-linux-x64-gnu || true
+        run: |
+          npm install --save-dev @rollup/rollup-linux-x64-gnu || true
 
       - name: Build frontend
         working-directory: frontend
@@ -64,49 +61,51 @@ jobs:
 
       - name: Create keystore.properties
         working-directory: frontend/android
+        env:
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           cat > keystore.properties <<EOF
           storeFile=app/release.keystore
           storeType=PKCS12
-          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
-          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          storePassword=$STORE_PASSWORD
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASSWORD
           EOF
 
       - name: Verify keystore
         working-directory: frontend/android
         run: |
-          test -f app/release.keystore
           ls -lh app/release.keystore
+          keytool -list \
+            -keystore app/release.keystore \
+            -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}"
 
       - name: Make Gradle executable
         working-directory: frontend/android
         run: chmod +x gradlew
 
-      - name: Build signed Release APK and AAB
+      - name: Build Release APK and AAB
         working-directory: frontend/android
         run: |
-          ./gradlew clean
-          ./gradlew assembleRelease bundleRelease --stacktrace --warning-mode all
+          ./gradlew clean assembleRelease bundleRelease --stacktrace
 
-      - name: Upload Release APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
           path: frontend/android/app/build/outputs/apk/release/*.apk
-          if-no-files-found: error
 
-      - name: Upload Release AAB
+      - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
           path: frontend/android/app/build/outputs/bundle/release/*.aab
-          if-no-files-found: error
 
-      - name: Upload mapping files
+      - name: Upload mapping
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: proguard-mapping
-          path: frontend/android/app/build/outputs/mapping/
-          if-no-files-found: ignore
+          path: frontend/android/app/build/outputs/mapping
