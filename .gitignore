@@ -31,3 +31,9 @@ build/
 
 # frontend/node_modules/
 node_modules/
+
+# Android signing files
+frontend/android/app/*.keystore
+frontend/android/app/*.base64
+frontend/android/app/keystore-base64.txt
+frontend/android/keystore.properties
