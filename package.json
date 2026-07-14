@@ -1,32 +1,30 @@
 {
-  "name": "elparadisogonzalo-llm",
+  "name": "elparadisogonzalo-com",
   "version": "1.0.0",
   "public": true,
-  "description": "elparadisogonzalo.com",
-  "keywords": [
-    "elparadisogonzalo.com"
-  ],
-  "homepage": "https://elparadisogonzalo.com",
-  "bugs": {
-    "url": "https://github.com/Elparadisogonzalo/Elparadisogonzalo.github.io/issues"
-  },
+  "description": "Elparadisogonzalo Web3 dApp and website",
+  "license": "Apache-2.0",
+  "author": "Azeh Agowa",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Elparadisogonzalo/Elparadisogonzalo.github.io.git"
+    "url": "https://github.com/azehagowa-creator/elparadisogonzalo.com.git"
   },
-  "license": "Apache-2.0",
-  "author": "elparadiso",
-  "type": "commonjs",
-  "main": "/sdcard/Elparadisogonzalo/elparadisogonzalo.github.io",
+  "homepage": "https://azehagowa-creator.github.io/elparadisogonzalo.com/",
   "workspaces": [
-    "packages/*"
+    "frontend"
   ],
-  "scripts": {
-    "dev": "npm run dev --workspaces",
-    "build": "npm run build --workspaces",
-    "deploy": "npm run deploy --workspaces"
-  },
   "engines": {
-    "node": ">=20"
+    "node": ">=22",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "install:frontend": "npm --prefix frontend install",
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "sync": "npm --prefix frontend exec cap sync android",
+    "android": "npm --prefix frontend exec cap open android",
+    "apk": "cd frontend/android && ./gradlew assembleDebug",
+    "release": "cd frontend/android && ./gradlew assembleRelease"
   }
 }
