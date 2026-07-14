@@ -1,0 +1,58 @@
+{
+  "name": "elparadisogonzalo-com",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Elparadisogonzalo Web3 dApp, website, Android app, and APIs",
+  "license": "Apache-2.0",
+  "author": "Azeh Agowa",
+  "homepage": "https://azehagowa-creator.github.io/elparadisogonzalo.com/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azehagowa-creator/elparadisogonzalo.com.git"
+  },
+  "bugs": {
+    "url": "https://github.com/azehagowa-creator/elparadisogonzalo.com/issues"
+  },
+  "keywords": [
+    "web3",
+    "ethereum",
+    "bsc",
+    "blockchain",
+    "vite",
+    "capacitor",
+    "android",
+    "github-pages",
+    "unstoppable-domains"
+  ],
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10"
+  },
+  "packageManager": "npm@10",
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=frontend",
+    "build": "npm run build --workspace=frontend",
+    "preview": "npm run preview --workspace=frontend",
+    "lint": "npm run lint --workspace=frontend",
+
+    "sync": "npm exec --workspace=frontend cap sync android",
+    "android": "npm exec --workspace=frontend cap open android",
+
+    "apk": "cd frontend/android && ./gradlew assembleDebug",
+    "release": "cd frontend/android && ./gradlew assembleRelease",
+    "bundle": "cd frontend/android && ./gradlew bundleRelease",
+
+    "clean": "rm -rf node_modules package-lock.json frontend/node_modules frontend/package-lock.json frontend/dist",
+
+    "reinstall": "npm run clean && npm install",
+
+    "prepare": "echo Repository ready",
+
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
