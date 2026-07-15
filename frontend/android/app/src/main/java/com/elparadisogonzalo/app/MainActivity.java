@@ -1,4 +1,4 @@
-package com.genyoungclip.elparadisogonzalo;
+package com.elparadisogonzalo.app;
 
 import com.getcapacitor.BridgeActivity;
 
