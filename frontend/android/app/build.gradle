@@ -11,11 +11,11 @@ if (keystorePropertiesFile.exists()) {
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "com.genyoungclip.elparadisogonzalo"
+    namespace = "com.elparadisogonzalo.app"
     compileSdk = rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.genyoungclip.elparadisogonzalo"
+        applicationId "com.elparadisogonzalo.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
