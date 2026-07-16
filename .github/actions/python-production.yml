@@ -1,0 +1,66 @@
+name: Python Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  production:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync repository
+        run: |
+          git fetch --all --prune
+          git checkout main
+          git reset --hard origin/main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Build production package
+        run: |
+          mkdir -p dist
+          python -m compileall .
+          cp -r . dist/
+
+      - name: Upload production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-production
+          path: |
+            dist/**
+            requirements.txt
+            pyproject.toml
+            setup.py
+          if-no-files-found: ignore
+
+      - name: Publish production package
+        run: |
+          if [ -f pyproject.toml ]; then
+            python -m pip install build twine
+            python -m build
+          fi
+
+      - name: Production completed
+        run: echo "Production build completed successfully."
