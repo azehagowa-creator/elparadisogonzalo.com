@@ -1,7 +1,3 @@
 [user]
-	name = Elparadisogonzalo
-	email = azehagowa@elparadisogonzalo.com
-[http]
-	cookiefile = /sdcard/Elparadisogonzalo/.gitcookies
-
-[.ssh]  .ssh = /sdcard/Elparadisogonzalo/.ssh
+	name = azehagowa-creator
+	email = azehagowa@gmail.com
