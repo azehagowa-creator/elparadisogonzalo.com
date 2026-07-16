@@ -1,0 +1,17 @@
+name: Python Self-Hosted Action
+description: Build, install dependencies, and execute Python applications on a self-hosted runner.
+author: azehagowa-creator
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        python3 -m pip install --upgrade pip --break-system-packages
+        if [ -f "${{ github.action_path }}/requirements.txt" ]; then
+          python3 -m pip install \
+            -r "${{ github.action_path }}/requirements.txt" \
+            --build-system-packages
+        fi
+
+        python3 "${{ github.action_path }}/entrypoint.py"
