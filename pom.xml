@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Project Information -->
     <groupId>com.elparadisogonzalo</groupId>
     <artifactId>elparadisogonzalo</artifactId>
     <version>2.0.0</version>
     <packaging>jar</packaging>
 
     <name>Elparadisogonzalo</name>
-    <description>Elparadisogonzalo Web3 platform and Android application</description>
+    <description>A modern full-stack Web3 platform and Android application built with React, Capacitor, Android and Java.</description>
     <url>https://github.com/azehagowa-creator/elparadisogonzalo.com</url>
 
+    <!-- License -->
     <licenses>
         <license>
             <name>MIT License</name>
@@ -23,36 +24,49 @@
         </license>
     </licenses>
 
+    <!-- Developer -->
     <developers>
         <developer>
             <id>azehagowa-creator</id>
-            <name>azehagowa-creator</name>
+            <name>Elparadisogonzalo</name>
             <email>genyoungclip@gmail.com</email>
         </developer>
     </developers>
 
+    <!-- Source Control -->
     <scm>
         <connection>scm:git:git://github.com/azehagowa-creator/elparadisogonzalo.com.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/azehagowa-creator/elparadisogonzalo.com.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com:azehagowa-creator/elparadisogonzalo.com.git</developerConnection>
         <url>https://github.com/azehagowa-creator/elparadisogonzalo.com</url>
         <tag>HEAD</tag>
     </scm>
 
+    <!-- Java -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+    </properties>
+
+    <!-- Download repositories -->
     <repositories>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/azehagowa-creator/elparadisogonzalo.com</url>
-        </repository>
 
         <repository>
             <id>central</id>
             <name>Maven Central</name>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
+
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/azehagowa-creator/elparadisogonzalo.com</url>
+        </repository>
+
     </repositories>
 
+    <!-- Publish destination -->
     <distributionManagement>
+
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
@@ -64,14 +78,25 @@
             <name>GitHub Packages Snapshots</name>
             <url>https://maven.pkg.github.com/azehagowa-creator/elparadisogonzalo.com</url>
         </snapshotRepository>
+
     </distributionManagement>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>21</maven.compiler.release>
-    </properties>
+    <!-- Dependencies -->
+    <dependencies>
 
+        <!-- JUnit -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.13.4</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!-- Build -->
     <build>
+
         <plugins>
 
             <plugin>
@@ -97,10 +122,34 @@
                     <execution>
                         <id>attach-sources</id>
                         <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.11.2</version>
+                <configuration>
+                    <source>21</source>
+                    <failOnError>false</failOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
                             <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.1.4</version>
             </plugin>
 
             <plugin>
@@ -110,6 +159,7 @@
             </plugin>
 
         </plugins>
+
     </build>
 
 </project>
