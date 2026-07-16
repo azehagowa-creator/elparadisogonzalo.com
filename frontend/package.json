@@ -32,15 +32,21 @@
     "@capacitor/android": "^7.4.2",
     "@capacitor/core": "^7.4.2",
     "ethers": "^6.15.0",
+    "framer-motion": "^12.42.2",
+    "lucide-react": "^1.24.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hot-toast": "^2.6.0",
+    "react-router-dom": "^7.18.1",
     "viem": "^2.31.0"
   },
   "devDependencies": {
     "@capacitor/cli": "^7.4.2",
+    "@tailwindcss/vite": "^4.3.2",
     "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^9.31.0",
     "prettier": "^3.6.0",
+    "tailwindcss": "^4.3.2",
     "vite": "^7.0.5"
   }
 }

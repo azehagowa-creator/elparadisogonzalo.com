@@ -37,22 +37,20 @@
     "build": "npm run build --workspace=frontend",
     "preview": "npm run preview --workspace=frontend",
     "lint": "npm run lint --workspace=frontend",
-
     "sync": "npm exec --workspace=frontend cap sync android",
     "android": "npm exec --workspace=frontend cap open android",
-
     "apk": "cd frontend/android && ./gradlew assembleDebug",
     "release": "cd frontend/android && ./gradlew assembleRelease",
     "bundle": "cd frontend/android && ./gradlew bundleRelease",
-
     "clean": "rm -rf node_modules package-lock.json frontend/node_modules frontend/package-lock.json frontend/dist",
-
     "reinstall": "npm run clean && npm install",
-
     "prepare": "echo Repository ready",
-
     "test": "echo \"No tests configured\" && exit 0"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "framer-motion": "^12.42.2",
+    "lucide-react": "^1.24.0",
+    "react-hot-toast": "^2.6.0",
+    "react-router-dom": "^7.18.1"
+  }
 }
