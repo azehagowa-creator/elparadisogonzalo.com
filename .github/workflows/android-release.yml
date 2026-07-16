@@ -35,9 +35,6 @@ jobs:
             package-lock.json
             frontend/package-lock.json
 
-      - name: Install root dependencies
-        run: npm ci
-
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm ci
@@ -53,38 +50,19 @@ jobs:
       - name: Grant Gradle permission
         run: chmod +x frontend/android/gradlew
 
-      - name: Restore Android keystore
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" \
-          | base64 --decode \
-          > frontend/android/app/release.keystore
-
-      - name: Create keystore properties
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
-        run: |
-          cat > frontend/android/keystore.properties <<EOF
-          storeFile=release.keystore
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyAlias=${{ secrets.KEY_ALIAS }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
-          EOF
-
       - name: Build Debug APK
         working-directory: frontend/android
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Build Release APK
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
         working-directory: frontend/android
         run: ./gradlew assembleRelease --stacktrace
 
       - name: Build Release Bundle
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
         working-directory: frontend/android
         run: ./gradlew bundleRelease --stacktrace
 
-      - name: Upload APK and AAB artifacts
+      - name: Upload Android artifacts
         uses: actions/upload-artifact@v4
         with:
           name: android-release-builds
