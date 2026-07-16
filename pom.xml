@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.elparadisogonzalo</groupId>
+    <artifactId>elparadisogonzalo</artifactId>
+    <version>2.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>Elparadisogonzalo</name>
+    <description>Elparadisogonzalo Web3 platform and Android application</description>
+    <url>https://github.com/azehagowa-creator/elparadisogonzalo.com</url>
+
+    <licenses>
+        <license>
+            <name>Apache 2.0 license</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>azehagowa-creator</id>
+            <name>azehagowa-creator</name>
+            <email>azehagowa@gmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/azehagowa-creator/elparadisogonzalo.com.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:azehagowa-creator/elparadisogonzalo.com.git</developerConnection>
+        <url>https://github.com/azehagowa-creator/elparadisogonzalo.com</url>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/azehagowa-creator/elparadisogonzalo.com</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/azehagowa-creator/*</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.elparadisogonzalo.app</groupId>
+            <artifactId>production</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.4</version>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
