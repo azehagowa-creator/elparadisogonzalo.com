@@ -1,7 +1,7 @@
 {
   "name": "elparadisogonzalo-frontend",
-  "version": "1.0.0",
-  "private": true,
+  "version": "2.0.0",
+  "public00": true,
   "description": "Frontend for the Elparadisogonzalo Web3 and DeFi platform",
   "author": "Azeh Agowa",
   "license": "Apache-2.0",

@@ -1,7 +1,7 @@
 {
   "name": "elparadisogonzalo-com",
-  "version": "1.0.0",
-  "private": true,
+  "version": "2.0.0",
+  "public": true,
   "description": "Elparadisogonzalo Web3 dApp, website, Android app, and APIs",
   "license": "Apache-2.0",
   "author": "Azeh Agowa",
@@ -28,7 +28,7 @@
     "node": ">=22",
     "npm": ">=10"
   },
-  "packageManager": "npm@10",
+  "packageManager": "npm@12",
   "workspaces": [
     "frontend"
   ],
