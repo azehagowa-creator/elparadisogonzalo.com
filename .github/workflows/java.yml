@@ -1,25 +1,36 @@
-name: Java CI
+- name: Checkout
+  uses: actions/checkout@v4
 
-on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+- name: Setup Java
+  uses: actions/setup-java@v4
+  with:
+    distribution: temurin
+    java-version: '21'
+    cache: gradle
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+- name: Setup Node
+  uses: actions/setup-node@v4
+  with:
+    node-version: 24
+    cache: npm
+    cache-dependency-path: |
+      package-lock.json
+      frontend/package-lock.json
 
-    steps:
-      - uses: actions/checkout@v4
+- name: Install root dependencies
+  run: npm ci
 
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "21"
-          cache: gradle
+- name: Install frontend dependencies
+  working-directory: frontend
+  run: npm ci
 
-      - run: chmod +x frontend/android/gradlew
+- name: Sync Capacitor
+  working-directory: frontend
+  run: npx cap sync android
 
-      - working-directory: frontend/android
-        run: ./gradlew build
+- name: Grant Gradle permission
+  run: chmod +x frontend/android/gradlew
+
+- name: Build Android
+  working-directory: frontend/android
+  run: ./gradlew build
