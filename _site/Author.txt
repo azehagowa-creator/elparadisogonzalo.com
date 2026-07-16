@@ -1,6 +1,0 @@
-name: Azeh agowa
-emails: azehagowa@elparadisogonzalo.com
-        koa@elparadisogonzalo.com
-        genyoungclip@gmail.com
-        koagonzalo@gmail.com
-        elparadisogonzaloserviceslimit@gmail.com
