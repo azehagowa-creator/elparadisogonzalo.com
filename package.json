@@ -1,5 +1,5 @@
 {
-  "name": "elparadisogonzalo-com",
+  "name": "@genyoungclip/elparadisogonzalo",
   "version": "2.0.0",
   "public": true,
   "description": "Elparadisogonzalo Web3 dApp, website, Android app, and APIs",
@@ -52,5 +52,9 @@
     "lucide-react": "^1.24.0",
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.18.1"
+   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
   }
 }
