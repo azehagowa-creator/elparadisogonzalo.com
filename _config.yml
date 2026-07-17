@@ -1,7 +1,0 @@
-title: Elparadisogonzalo
-description: Web3 • Full Stack • Open Source
-
-remote_theme: mmistakes/minimal-mistakes
-
-plugins:
-  - jekyll-include-cache
