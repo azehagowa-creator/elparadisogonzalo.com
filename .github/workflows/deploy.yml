@@ -1,0 +1,6 @@
+jobs:
+  deploy:
+    runs-on: self-hosted
+    environment:
+      name: production
+      url: https://elparadisogonzalo.com
