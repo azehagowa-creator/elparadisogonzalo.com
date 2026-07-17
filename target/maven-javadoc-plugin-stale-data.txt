@@ -1,0 +1,48 @@
+-J-Duser.language=
+-J-Duser.country=
+@options
+@packages
+-encoding
+'UTF-8'
+-protected
+--release
+21
+-sourcepath
+'/home/azehagowa/repos/elparadisogonzalo.com/src/main/java:/home/azehagowa/repos/elparadisogonzalo.com/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2026. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'Elparadisogonzalo 2.0.1 API'
+-use
+-version
+-windowtitle
+'Elparadisogonzalo 2.0.1 API'
+com.elparadisogonzalo
+/home/azehagowa/repos/elparadisogonzalo.com/src/main/java = 1784232561265
+/home/azehagowa/repos/elparadisogonzalo.com/target/generated-sources/annotations = 1784249089157
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/element-list = 1784249098601
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/overview-tree.html = 1784249098689
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/allclasses-index.html = 1784249098725
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/allpackages-index.html = 1784249098733
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/module-search-index.js = 1784249098741
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/package-search-index.js = 1784249098745
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/type-search-index.js = 1784249098745
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/member-search-index.js = 1784249098749
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/tag-search-index.js = 1784249098753
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/index-all.html = 1784249098777
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/search.html = 1784249098785
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/index.html = 1784249098793
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/help-doc.html = 1784249098809
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/stylesheet.css = 1784249098821
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/script.js = 1784249098825
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/copy.svg = 1784249098829
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/link.svg = 1784249098833
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/search.js = 1784249098841
+/home/azehagowa/repos/elparadisogonzalo.com/target/reports/apidocs/search-page.js = 1784249098845
