@@ -2,8 +2,8 @@
 
 All notable changes to the Elparadisogonzalo system are documented here.
 
-Format: Semantic Versioning | https://semver.org  
-Changelog style: Keep a Changelog | https://keepachangelog.com
+Format: Semantic Versioning | https://elparadisogonzalo.com 
+Changelog style: Keep a Changelog | https://elparadisogonzalo.com
 
 ---
 
