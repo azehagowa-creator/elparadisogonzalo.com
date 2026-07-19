@@ -1,0 +1,72 @@
+name: Sync Git Objects
+
+on:
+push:
+branches:
+- main
+- master
+workflow_dispatch:
+schedule:
+- cron: "0 */6 * * *"
+
+permissions:
+contents: write
+
+jobs:
+build:
+runs-on: self-hosted
+
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+    with:
+      fetch-depth: max
+
+  - name: Set up Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: 22
+      cache: npm
+
+  - name: Install dependencies
+    run: |
+      if [ -f package-lock.json ]; then
+        npm ci
+      elif [ -f package.json ]; then
+        npm install
+      else
+        echo "No package.json found. Skipping dependency installation."
+      fi
+
+  - name: Build project
+    run: |
+      if [ -f package.json ] && npm pkg get scripts.build | grep -qv "null"; then
+        npm run build
+      else
+        echo "No build script found. Skipping build."
+      fi
+
+sync:
+needs: build
+runs-on: self-hosted
+
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+    with:
+      fetch-depth: 0
+
+  - name: Fetch all Git objects
+    run: |
+      git fetch --all --tags --prune
+
+  - name: Verify repository
+    run: |
+      git fsck --full
+      git gc --prune=now
+      git count-objects -v
+      git branch -a
+      git tag
+
+  - name: Repository synchronized
+    run: echo "✅ Git objects are synchronized."
