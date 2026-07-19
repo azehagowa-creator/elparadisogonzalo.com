@@ -1,13 +1,22 @@
 {
+  "name": "elparadisogonzalo",
+  "compatibility_date": "2026-07-19",
+
+  "assets": {
+    "directory": "./dist"
+  },
+
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1,
+
     "logs": {
       "enabled": true,
       "head_sampling_rate": 1,
       "persist": true,
       "invocation_logs": true
     },
+
     "traces": {
       "enabled": true,
       "persist": true,

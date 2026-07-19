@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+export default {
+  async fetch(request: Request): Promise<Response> {
+    const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +11,6 @@
 <meta name="description" content="Welcome to El Paradiso Gonzalo">
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -30,6 +31,7 @@ padding:25px 8%;
 background:#111827;
 position:sticky;
 top:0;
+z-index:100;
 }
 
 .logo{
@@ -42,13 +44,18 @@ nav a{
 color:white;
 text-decoration:none;
 margin-left:25px;
+transition:.3s;
+}
+
+nav a:hover{
+color:#38bdf8;
 }
 
 .hero{
 display:flex;
 flex-wrap:wrap;
-align-items:center;
 justify-content:space-between;
+align-items:center;
 padding:90px 8%;
 gap:40px;
 }
@@ -74,7 +81,7 @@ margin-top:40px;
 
 .btn{
 display:inline-block;
-padding:16px 28px;
+padding:15px 28px;
 border-radius:12px;
 text-decoration:none;
 font-weight:bold;
@@ -97,21 +104,15 @@ color:white;
 }
 
 .secondary:hover{
-background:#1f2937;
+background:#374151;
 }
 
 .card{
-
 width:360px;
-
 background:#1f2937;
-
 border-radius:20px;
-
 padding:30px;
-
-box-shadow:0 20px 50px rgba(0,0,0,.4);
-
+box-shadow:0 20px 50px rgba(0,0,0,.35);
 }
 
 .card h2{
@@ -131,13 +132,13 @@ padding:80px 8%;
 
 .title{
 text-align:center;
+font-size:38px;
 margin-bottom:60px;
-font-size:36px;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:25px;
 }
 
@@ -145,6 +146,11 @@ gap:25px;
 background:#1f2937;
 padding:30px;
 border-radius:18px;
+transition:.3s;
+}
+
+.box:hover{
+transform:translateY(-6px);
 }
 
 .box h3{
@@ -172,12 +178,11 @@ background:#111827;
 .deploy a{
 display:inline-block;
 margin-top:25px;
-padding:15px 30px;
+padding:16px 28px;
 background:#22c55e;
 color:white;
 text-decoration:none;
 border-radius:12px;
-font-weight:bold;
 }
 
 .deploy a:hover{
@@ -207,7 +212,6 @@ width:100%;
 }
 
 }
-
 </style>
 
 </head>
@@ -215,52 +219,36 @@ width:100%;
 <body>
 
 <header>
-
-<div class="logo">
-El Paradiso Gonzalo
-</div>
+<div class="logo">El Paradiso Gonzalo</div>
 
 <nav>
-
 <a href="#features">Features</a>
-
 <a href="#walkthrough">Walkthrough</a>
-
 <a href="#deploy">Hosting</a>
-
 </nav>
-
 </header>
 
 <div class="hero">
 
 <div class="left">
 
-<h1>
-Welcome to El Paradiso Gonzalo
-</h1>
+<h1>Welcome to El Paradiso Gonzalo</h1>
 
 <p>
-
 A modern web application powered by Cloudflare Workers and designed with performance, security, and responsive user experience in mind.
-
 </p>
 
 <div class="buttons">
 
 <a class="btn primary"
 href="http://elparadisogonzalo.genyoungclip-0ce.workers.dev/"
-target="_blank">
-
+target="_site">
 Open Website
-
 </a>
 
 <a class="btn secondary"
 href="#walkthrough">
-
 Getting Started
-
 </a>
 
 </div>
@@ -271,45 +259,11 @@ Getting Started
 
 <h2>System Status</h2>
 
-<div class="status">
-
-<span>Hosting</span>
-
-<span>Online</span>
-
-</div>
-
-<div class="status">
-
-<span>Responsive UI</span>
-
-<span>Enabled</span>
-
-</div>
-
-<div class="status">
-
-<span>HTTPS</span>
-
-<span>Recommended</span>
-
-</div>
-
-<div class="status">
-
-<span>Cloudflare</span>
-
-<span>Workers</span>
-
-</div>
-
-<div class="status">
-
-<span>Deployment</span>
-
-<span>Ready</span>
-
-</div>
+<div class="status"><span>Hosting</span><span>Online</span></div>
+<div class="status"><span>Cloudflare</span><span>Workers</span></div>
+<div class="status"><span>Responsive UI</span><span>Enabled</span></div>
+<div class="status"><span>HTTPS</span><span>Ready</span></div>
+<div class="status"><span>Deployment</span><span>Operational</span></div>
 
 </div>
 
@@ -317,76 +271,28 @@ Getting Started
 
 <section id="features">
 
-<h2 class="title">
-
-Features
-
-</h2>
+<h2 class="title">Features</h2>
 
 <div class="grid">
 
 <div class="box">
-
-<h3>
-
-Responsive Design
-
-</h3>
-
-<p>
-
-Optimized for desktops, tablets, and mobile devices.
-
-</p>
-
+<h3>Responsive Design</h3>
+<p>Optimized for desktop, tablet, and mobile devices.</p>
 </div>
 
 <div class="box">
-
-<h3>
-
-Fast Performance
-
-</h3>
-
-<p>
-
-Minimal dependencies for quick loading and efficient delivery.
-
-</p>
-
+<h3>Fast Performance</h3>
+<p>Built for speed with Cloudflare's global edge network.</p>
 </div>
 
 <div class="box">
-
-<h3>
-
-Secure Hosting
-
-</h3>
-
-<p>
-
-Ready for HTTPS and Cloudflare deployment.
-
-</p>
-
+<h3>Secure Hosting</h3>
+<p>HTTPS-ready with modern security practices.</p>
 </div>
 
 <div class="box">
-
-<h3>
-
-Easy Customization
-
-</h3>
-
-<p>
-
-Update branding, colors, and content with simple HTML edits.
-
-</p>
-
+<h3>Easy Customization</h3>
+<p>Update branding, pages, and features with ease.</p>
 </div>
 
 </div>
@@ -395,44 +301,28 @@ Update branding, colors, and content with simple HTML edits.
 
 <section id="walkthrough">
 
-<h2 class="title">
-
-Walkthrough
-
-</h2>
+<h2 class="title">Walkthrough</h2>
 
 <div class="steps">
 
 <div class="step">
-
 <strong>Step 1</strong>
-
-<p>Upload this index.html file to your hosting platform.</p>
-
+<p>Deploy this Worker using Wrangler.</p>
 </div>
 
 <div class="step">
-
 <strong>Step 2</strong>
-
-<p>Configure your DNS records to point to the hosting service.</p>
-
+<p>Attach your custom domain from the Cloudflare Dashboard.</p>
 </div>
 
 <div class="step">
-
 <strong>Step 3</strong>
-
-<p>Enable HTTPS using a valid SSL/TLS certificate.</p>
-
+<p>Enable SSL/TLS.</p>
 </div>
 
 <div class="step">
-
 <strong>Step 4</strong>
-
-<p>Deploy updates whenever you modify your website.</p>
-
+<p>Publish future updates using <code>wrangler deploy</code>.</p>
 </div>
 
 </div>
@@ -441,42 +331,4 @@ Walkthrough
 
 <section class="deploy" id="deploy">
 
-<h2 class="title">
-
-Deployment
-
-</h2>
-
-<p>
-
-Cloudflare Workers Deployment URL
-
-</p>
-
-<a href="http://elparadisogonzalo.genyoungclip-0ce.workers.dev/"
-target="_site">
-
-http://elparadisogonzalo.genyoungclip-0ce.workers.dev/
-
-</a>
-
-</section>
-
-<footer>
-
-<p>
-
-© 2026 El Paradiso Gonzalo
-
-</p>
-
-<p>
-
-Designed for speed, security, and modern web hosting.
-
-</p>
-
-</footer>
-
-</body>
-</html>
+<h2 class="title">Deployment</h2>
