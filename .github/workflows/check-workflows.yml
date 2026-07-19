@@ -1,0 +1,28 @@
+name: Check GitHub Workflows
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-workflows:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find workflow files
+        run: |
+          echo "Workflow files:"
+          find .github/workflows -name "*.yml" -o -name "*.yaml"
+
+      - name: Check for outdated GitHub Actions
+        run: |
+          echo "Checking for older action versions..."
+          grep -R "actions/checkout@v1\|actions/checkout@v2\|actions/checkout@v3" .github/workflows || true
+          grep -R "actions/setup-node@v1\|actions/setup-node@v2\|actions/setup-node@v3" .github/workflows || true
