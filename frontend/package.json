@@ -1,4 +1,3 @@
-cat > package.json <<'EOF'
 {
   "name": "@azehagowa-creator/frontend",
   "version": "1.0.0",
@@ -11,6 +10,6 @@ cat > package.json <<'EOF'
   },
   "devDependencies": {
     "vite": "^8.1.5"
-  }
+  },
+  "homepage": "http://elparadisogonzalo.genyoungclip-0ce.workers.dev/"
 }
-EOF
