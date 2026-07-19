@@ -1,0 +1,16 @@
+cat > package.json <<'EOF'
+{
+  "name": "@azehagowa-creator/frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.1.5"
+  }
+}
+EOF
