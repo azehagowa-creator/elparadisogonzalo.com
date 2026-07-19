@@ -35,6 +35,7 @@
   "scripts": {
     "dev": "npm run dev --workspace=frontend",
     "build": "npm run build --workspace=frontend",
+    "deploy": "npm run deploy --workspace=frontend",
     "preview": "npm run preview --workspace=frontend",
     "lint": "npm run lint --workspace=frontend",
     "sync": "npm exec --workspace=frontend cap sync android",
@@ -56,7 +57,7 @@
     "react-router-dom": "^7.18.1"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
+    "registry": "https://npm.pkg.elparadisogonzalo.com",
     "access": "public"
   }
 }

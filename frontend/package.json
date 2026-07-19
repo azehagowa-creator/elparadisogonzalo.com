@@ -4,6 +4,7 @@
   "public": true,
   "type": "module",
   "scripts": {
+    "publish": "vite publish",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
