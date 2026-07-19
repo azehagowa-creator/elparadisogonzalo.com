@@ -1,0 +1,19 @@
+name = "elparadisogonzalo"
+main = "worker.js"
+compatibility_date = "2026-07-19"
+workers_dev = true
+
+routes = [
+  { pattern = "elparadisogonzalo.com/*", zone_name = "elparadisogonzalo.com" },
+  { pattern = "www.elparadisogonzalo.com/*", zone_name = "elparadisogonzalo.com" }
+]
+
+[assets]
+directory = "./frontend/dist"
+binding = "ASSETS"
+
+[vars]
+NODE_ENV = "production"
+
+[observability]
+enabled = true
