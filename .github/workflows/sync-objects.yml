@@ -1,70 +1,105 @@
 name: Sync Git Objects
 
 on:
-  push:
-    branches:
-      - main
-      - master
-  workflow_dispatch:
-  schedule:
-    - cron: '0 */6 * * *'
+push:
+branches:
+- main
+- master
+workflow_dispatch:
+schedule:
+- cron: '0 */6 * * *'
 
 permissions:
-  contents: write
+contents: write
 
 jobs:
-  build:
-    name: Build
-    runs-on: self-hosted
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+build:
+name: Build
+runs-on: self-hosted
 
-      - name: Build project
-        shell: bash
-        run: |
-          echo "Starting build..."
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+    with:
+      fetch-depth: 0
 
-          if [ -f requirements.txt ]; then
-            python3 -m pip install -r requirements.txt
-          fi
+  - name: Set up Python virtual environment
+    if: hashFiles('requirements.txt') != ''
+    run: |
+      python3 -m venv .venv
+      .venv/bin/python -m pip install --upgrade pip
+      .venv/bin/python -m pip install -r requirements.txt
 
-          if [ -f package.json ]; then
-            if [ -f package-lock.json ]; then
-              npm ci
-            else
-              npm install
-            fi
-            npm run build --if-present
-          fi
+  - name: Build Python project
+    if: hashFiles('requirements.txt') != ''
+    run: |
+      .venv/bin/python --version
+      echo "✅ Python dependencies installed."
 
-          echo "Build completed."
+  - name: Install Node.js dependencies
+    if: hashFiles('package.json') != ''
+    run: |
+      if [ -f package-lock.json ]; then
+        npm ci
+      else
+        npm install
+      fi
 
-  sync:
-    name: Sync Git Objects
-    needs: build
-    runs-on: self-hosted
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  - name: Build Node.js project
+    if: hashFiles('package.json') != ''
+    run: |
+      npm run build --if-present
 
-      - name: Fetch all Git objects
-        shell: bash
-        run: |
-          git fetch --all --tags --prune
+  - name: Build frontend
+    if: hashFiles('frontend/package.json') != ''
+    working-directory: frontend
+    run: |
+      if [ -f package-lock.json ]; then
+        npm ci
+      else
+        npm install
+      fi
 
-      - name: Verify repository
-        shell: bash
-        run: |
-          git fsck --full
-          git count-objects -v
-          git branch -a
-          git tag
+      npm run build --if-present
 
-      - name: Repository synchronized
-        run: |
-          echo "Git objects are synchronized."
+  - name: Build MCP server
+    if: hashFiles('mcp-server/package.json') != ''
+    working-directory: mcp-server
+    run: |
+      if [ -f package-lock.json ]; then
+        npm ci
+      else
+        npm install
+      fi
+
+      npm run build --if-present
+
+  - name: Build completed
+    run: |
+      echo "✅ Build completed successfully."
+
+sync:
+name: Sync Git Objects
+needs: build
+runs-on: self-hosted
+
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+    with:
+      fetch-depth: 0
+
+  - name: Fetch all Git objects
+    run: |
+      git fetch --all --tags --prune
+
+  - name: Verify repository
+    run: |
+      git fsck --full
+      git count-objects -v
+      git branch -a
+      git tag
+
+  - name: Repository synchronized
+    run: |
+      echo "✅ Git objects are synchronized."
