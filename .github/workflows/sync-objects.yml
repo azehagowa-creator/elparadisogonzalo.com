@@ -1,72 +1,70 @@
 name: Sync Git Objects
 
 on:
-push:
-branches:
-- main
-- master
-workflow_dispatch:
-schedule:
-- cron: "0 */6 * * *"
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
 
 permissions:
-contents: write
+  contents: write
 
 jobs:
-build:
-runs-on: self-hosted
+  build:
+    name: Build
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
-    with:
-      fetch-depth: max
+      - name: Build project
+        shell: bash
+        run: |
+          echo "Starting build..."
 
-  - name: Set up Node.js
-    uses: actions/setup-node@v4
-    with:
-      node-version: 22
-      cache: npm
+          if [ -f requirements.txt ]; then
+            python3 -m pip install -r requirements.txt
+          fi
 
-  - name: Install dependencies
-    run: |
-      if [ -f package-lock.json ]; then
-        npm ci
-      elif [ -f package.json ]; then
-        npm install
-      else
-        echo "No package.json found. Skipping dependency installation."
-      fi
+          if [ -f package.json ]; then
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
+            npm run build --if-present
+          fi
 
-  - name: Build project
-    run: |
-      if [ -f package.json ] && npm pkg get scripts.build | grep -qv "null"; then
-        npm run build
-      else
-        echo "No build script found. Skipping build."
-      fi
+          echo "Build completed."
 
-sync:
-needs: build
-runs-on: self-hosted
+  sync:
+    name: Sync Git Objects
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
-    with:
-      fetch-depth: 0
+      - name: Fetch all Git objects
+        shell: bash
+        run: |
+          git fetch --all --tags --prune
 
-  - name: Fetch all Git objects
-    run: |
-      git fetch --all --tags --prune
+      - name: Verify repository
+        shell: bash
+        run: |
+          git fsck --full
+          git count-objects -v
+          git branch -a
+          git tag
 
-  - name: Verify repository
-    run: |
-      git fsck --full
-      git gc --prune=now
-      git count-objects -v
-      git branch -a
-      git tag
-
-  - name: Repository synchronized
-    run: echo "✅ Git objects are synchronized."
+      - name: Repository synchronized
+        run: |
+          echo "Git objects are synchronized."
