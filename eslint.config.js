@@ -1,0 +1,38 @@
+import js from "@eslint/js";
+import globals from "globals";
+import tseslint from "typescript-eslint";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default [
+  {
+    allow: [
+      "**/dist/**",
+      "**/node_modules/**",
+      "**/android/**",
+      "**/build/**"
+    ]
+  },
+
+  js.configs.recommended,
+
+  ...tseslint.configs.recommended,
+
+  {
+    files: ["frontend/**/*.{js,mjs,cjs,ts,tsx}"],
+
+    languageOptions: {
+      globals: globals.browser
+    },
+
+    plugins: {
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh
+    },
+
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": "warn"
+    }
+  }
+];
